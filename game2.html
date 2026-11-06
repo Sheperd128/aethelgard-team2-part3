@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aethelgard | Trial 02: Memory Grid</title>
+    <style>
+        :root { --bg: #061a14; --card: #0b2920; --accent: #10b981; --text: #ecfdf5; --border: #134e4a; --error: #f43f5e; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; user-select: none; }
+        body { background-color: var(--bg); color: var(--text); padding: 2rem 1rem; display: flex; flex-direction: column; align-items: center; }
+        .container { max-width: 500px; width: 100%; background: var(--card); border: 1px solid var(--border); padding: 2rem; border-radius: 8px; text-align: center; }
+        h2 { color: var(--accent); margin-bottom: 0.5rem; letter-spacing: 2px; }
+        
+        .status { font-size: 1.1rem; margin: 1rem 0; color: #f59e0b; font-weight: bold; min-height: 30px; }
+        
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; max-width: 280px; margin: 1.5rem auto; }
+        .pad { aspect-ratio: 1; background: #022c22; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; opacity: 0.6; transition: 0.15s; }
+        .pad.active { opacity: 1; box-shadow: 0 0 25px currentColor; border-color: #fff; transform: scale(0.96); }
+        
+        #p-0 { background: #10b981; color: #10b981; }
+        #p-1 { background: #f43f5e; color: #f43f5e; }
+        #p-2 { background: #f59e0b; color: #f59e0b; }
+        #p-3 { background: #38bdf8; color: #38bdf8; }
+
+        .btn { padding: 0.8rem 1.5rem; background: var(--accent); color: #022c22; border: none; font-weight: bold; font-size: 1rem; cursor: pointer; border-radius: 4px; text-transform: uppercase; width: 100%; margin-top: 1rem; }
+        .btn:hover { background: #059669; color: #fff; }
+        
+        #reward-box { display: none; margin-top: 1rem; background: #022c22; padding: 1.5rem; border: 1px solid var(--accent); border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>TRIAL 02: MEMORY GRID</h2>
+        <p style="font-size: 0.85rem; color: #6ee7b7;">Observe the sequence flash and repeat it accurately. Survive <strong>5 Rounds</strong> to bypass firewall sector 2.</p>
+        
+        <div class="status" id="status-text">PRESS START TO BEGIN</div>
+        
+        <div class="grid">
+            <div class="pad" id="p-0" onclick="handlePad(0)"></div>
+            <div class="pad" id="p-1" onclick="handlePad(1)"></div>
+            <div class="pad" id="p-2" onclick="handlePad(2)"></div>
+            <div class="pad" id="p-3" onclick="handlePad(3)"></div>
+        </div>
+        
+        <button class="btn" id="start-btn" onclick="startGame()">INITIALIZE SEQUENCE</button>
+
+        <div id="reward-box">
+            <h3 style="color: #34d399; margin-bottom: 0.5rem;">TRIAL CLEARED</h3>
+            <p>Code Segment Beta recovered: <strong style="color: #f59e0b; font-size: 1.2rem;">3819</strong></p>
+            <p style="font-size: 0.85rem; color: #6ee7b7; margin-top: 10px;">Memorize this code and return to the main terminal hub.</p>
+            <a href="index.html" class="btn" style="display: inline-block; text-decoration: none; margin-top: 10px;">RETURN TO HUB</a>
+        </div>
+    </div>
+
+    <script>
+        let sequence = [];
+        let playerSeq = [];
+        let round = 0;
+        let isPlaying = false;
+        let canClick = false;
+
+        function startGame() {
+            document.getElementById('start-btn').style.display = 'none';
+            sequence = [];
+            round = 0;
+            nextRound();
+        }
+
+        function nextRound() {
+            playerSeq = [];
+            round++;
+            if (round > 5) {
+                endGame(true);
+                return;
+            }
+            document.getElementById('status-textinnerText = `ROUND ${round} OF 5: MEMORIZE`');
+            document.getElementById('status-text').innerText = `ROUND ${round} OF 5: MEMORIZE`;
+            canClick = false;
+
+            // Add random pad (0 to 3)
+            sequence.push(Math.floor(Math.random() * 4));
+            playSequence();
+        }
+
+        function playSequence() {
+            let i = 0;
+            let interval = setInterval(() => {
+                let padId = sequence[i];
+                flashPad(padId);
+                i++;
+                if (i >= sequence.length) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        canClick = true;
+                        document.getElementById('status-text').innerText = `ROUND ${round} OF 5: YOUR TURN`;
+                    }, 400);
+                }
+            }, 750);
+        }
+
+        function flashPad(id) {
+            let pad = document.getElementById(`p-${id}`);
+            pad.classList.add('active');
+            setTimeout(() => {
+                pad.classList.remove('active');
+            }, 300);
+        }
+
+        function handlePad(id) {
+            if (!canClick) return;
+
+            flashPad(id);
+            playerSeq.push(id);
+
+            let currentIndex = playerSeq.length - 1;
+            if (playerSeq[currentIndex] !== sequence[currentIndex]) {
+                canClick = false;
+                document.getElementById('status-text').innerHTML = '<span style="color: #f43f5e;">SEQUENCE MISMATCH. REBOOTING...</span>';
+                setTimeout(startGame, 2000);
+                return;
+            }
+
+            if (playerSeq.length === sequence.length) {
+                canClick = false;
+                if (round === 5) {
+                    endGame(true);
+                } else {
+                    document.getElementById('status-text').innerHTML = '<span style="color: #34d399;">CORRECT! PREPARING NEXT...</span>';
+                    setTimeout(nextRound, 1200);
+                }
+            }
+        }
+
+        function endGame(won) {
+            if (won) {
+                document.getElementById('status-text').innerText = "SECURITY LAYER 2 BYPASSED";
+                document.getElementById('reward-box').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

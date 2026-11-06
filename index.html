@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aethelgard Logistics | Corporate Overview & Operations</title>
+    <style>
+        :root { --bg: #061a14; --card: #0b2920; --accent: #10b981; --text: #ecfdf5; --border: #134e4a; --error: #f43f5e; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; }
+        body { background-color: var(--bg); color: var(--text); padding: 3rem 1rem; display: flex; flex-direction: column; align-items: center; }
+        
+        .container { max-width: 900px; width: 100%; background: var(--card); border: 1px solid var(--border); padding: 3rem; border-radius: 8px; box-shadow: 0 0 30px rgba(16,185,129,0.1); }
+        
+        header { text-align: center; margin-bottom: 2.5rem; border-bottom: 2px solid var(--accent); padding-bottom: 1.5rem; }
+        header h1 { color: var(--accent); font-size: 2rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 0.5rem; }
+        header p { color: #6ee7b7; font-size: 0.95rem; font-family: monospace; }
+
+        .content-section { margin-bottom: 2.5rem; }
+        .content-section h2 { color: #ffffff; font-size: 1.3rem; margin-bottom: 1rem; border-left: 4px solid var(--accent); padding-left: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .content-section p { color: #d1fae5; margin-bottom: 1rem; font-size: 1rem; text-align: justify; }
+
+        /* Subtle embedded links (no underline, just bold) */
+        .subtle-link { color: inherit; font-weight: bold; text-decoration: none; cursor: pointer; }
+        .subtle-link:hover { color: var(--accent); }
+
+        /* Gate verification box at the bottom */
+        .gate-section { background: #022c22; border: 1px solid var(--border); padding: 2rem; border-radius: 6px; margin-top: 3rem; text-align: center; }
+        input { width: 100%; max-width: 300px; padding: 0.9rem; background: var(--bg); border: 1px solid var(--border); color: #fff; font-size: 1.2rem; text-align: center; letter-spacing: 4px; margin: 1rem 0; border-radius: 4px; display: block; margin-left: auto; margin-right: auto; font-family: monospace; }
+        input:focus { outline: none; border-color: var(--accent); }
+        
+        .btn { padding: 0.9rem 2rem; background: var(--accent); color: #022c22; border: none; font-weight: bold; font-size: 1.1rem; cursor: pointer; border-radius: 4px; text-transform: uppercase; }
+        .btn:hover { background: #059669; color: #fff; }
+        
+        .error { color: var(--error); margin-top: 10px; display: none; font-weight: bold; font-family: monospace; }
+        
+        #success-box { display: none; margin-top: 2rem; background: rgba(16,185,129,0.15); border: 1px solid var(--accent); padding: 2rem; border-radius: 6px; text-align: center; }
+        #success-box a { color: #34d399; font-weight: bold; font-size: 1.2rem; text-decoration: none; border-bottom: 2px solid var(--accent); }
+        #success-box a:hover { color: #fff; }
+
+        /* Modal styling for hidden logs */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 44, 34, 0.95); justify-content: center; align-items: center; z-index: 1000; padding: 1rem; backdrop-filter: blur(4px); }
+        .modal-content { background: #022c22; border: 1px solid var(--accent); padding: 2.5rem; width: 100%; max-width: 600px; border-radius: 8px; position: relative; font-family: 'Courier New', Courier, monospace; box-shadow: 0 0 30px rgba(16,185,129,0.2); }
+        .log-header { color: #34d399; margin-bottom: 1rem; border-bottom: 1px dashed var(--border); padding-bottom: 0.5rem; font-weight: bold; }
+        .msg-alpha { color: #a855f7; margin-bottom: 0.8rem; }
+        .msg-beta { color: #eab308; margin-bottom: 0.8rem; }
+        .close-btn { position: absolute; top: 15px; right: 20px; background: none; border: none; color: var(--error); font-size: 1.2rem; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Aethelgard Logistics & Supply</h1>
+            <p>CORPORATE MANDATE & OPERATIONAL HISTORY // ARCHIVE LEVEL 3</p>
+        </header>
+
+        <!-- Section 1: Intro & Lore + Trial 1 Link -->
+        <div class="content-section">
+            <h2>01. Corporate Philosophy & The Foundation</h2>
+            <p>Founded on principles of unwavering global integration, Aethelgard Logistics has long stood as the backbone of international shipping, resource distribution, and high-stakes corporate governance. However, beneath the polished veneer of pristine supply chains and humanitarian investments lies a darker truth. For decades, the executive board leveraged humanitarian charity foundations—including regional development projects championed by junior staff—as tax shelters and debt-absorption vehicles.</p>
+            <p>When audits revealed that millions in public trust funds were systematically redirected to cover speculative corporate failures, internal panic ensued. The killing of the CEO was not merely a random act of violence; it was a surgical extraction designed to prevent the total legal collapse of the entire conglomerate. To initiate your compliance check for this sector, access the <a href="cipher1.html" class="subtle-link">security</a> gateway protocol to begin diagnostics.</p>
+        </div>
+
+        <!-- Section 2: Lore & Hidden Email Log 1 -->
+        <div class="content-section">
+            <h2>02. Supply Chain Integrity & Asset Movement</h2>
+            <p>Our transport nodes span across five continents, ensuring that high-value hardware and sensitive organic compounds arrive precisely when scheduled. Inventory audits are treated with absolute gravity. When discrepancies arise, internal compliance officers invoke strict containment procedures. Yet, records indicate that certain inventory spikes bypassed standard oversight entirely during the weeks leading up to the estate blackout.</p>
+            <p>Investigators reviewing internal communications have flagged anomalous data transfers between senior administrative endpoints. You may review the recovered compliance memo <span class="subtle-link" onclick="openModal('modal-email-1')">regarding resource allocation</span> for additional contextual grounding.</p>
+        </div>
+
+        <!-- Section 3: Lore + Trial 2 Link -->
+        <div class="content-section">
+            <h2>03. Protocol Redundancy & Risk Management</h2>
+            <p>Risk mitigation requires proactive structural changes. When a system or an individual becomes a liability to the overarching vision of absolute reform, standard corporate protocols dictate immediate isolation. The board believed they could silence dissenting voices through intimidation, failing to realize that their actions were being mirrored by a far more calculating architect working quietly behind the scenes.</p>
+            <p>To evaluate how structural threat assessments are handled within our secondary systems, agents must review the <a href="cipher2.html" class="subtle-link">compliance</a> matrix interface.</p>
+        </div>
+
+        <!-- Section 4: Lore & Hidden Call Log -->
+        <div class="content-section">
+            <h2>04. Executive Oversight & Human Resources</h2>
+            <p>Employee retention and psychological conditioning remained paramount priorities for the executive committee. Through subtle behavioral enforcement and mandatory wellness restructuring, staff turnover was kept artificially low. Employees who showed exceptional dedication were frequently hand-selected for 'special initiatives'—a corporate euphemism for shouldering high-risk operational burdens under the guise of civic duty.</p>
+            <p>Intercepted audio logs recovered from an encrypted corporate relay shed light on how upper management manipulated vulnerable idealists. You may audit the <span class="subtle-link" onclick="openModal('modal-call-1')">transcripts of the late-night briefing</span> to understand the psychological levers used during the operation.</p>
+        </div>
+
+        <!-- Section 5: Lore + Trial 3 Link -->
+        <div class="content-section">
+            <h2>05. Security Grid Architecture</h2>
+            <p>The physical security of our regional hubs relies on immutable barriers and automated circuit breakers. When the final blackout protocol was initiated at the Alpine estate, it disabled all surveillance arrays simultaneously. This level of precise synchronization required deep-level authorization credentials that no single low-level employee possessed independently. Someone supplied the keys, guided every step, and convinced the operative that they were acting as an executioner of justice.</p>
+            <p>For a detailed breakdown of how network anomalies are investigated and isolated, access the <a href="cipher3.html" class="subtle-link">intruders</a> database subsection.</p>
+        </div>
+
+        <!-- Master Code Gate -->
+        <div class="gate-section">
+            <h3 style="color: #ffffff; margin-bottom: 0.5rem;">MASTER CODE VERIFICATION</h3>
+            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 1rem;">Enter the final security code recovered from the completed trials to proceed.</p>
+            
+            <input type="text" id="master-code" placeholder="ENTER CODE" maxlength="4" autocomplete="off">
+            <button class="btn" onclick="verifyMasterCode()">AUTHORIZE OVERRIDE</button>
+            <div class="error" id="error-msg">AUTHORIZATION REJECTED. INVALID CODE SEGMENT.</div>
+        </div>
+
+        <div id="success-box">
+            <h3 style="color: var(--accent); margin-bottom: 1rem;">[ SECURITY CLEARANCE GRANTED ]</h3>
+            <p style="margin-bottom: 1.5rem;">Team 2 logistics investigation complete. Proceed to the final integration phase.</p>
+            <a href="https://aethelgard-team2-part4.vercel.app/">PROCEED TO WEBSITE 4 &rarr;</a>
+        </div>
+    </div>
+
+    <!-- HIDDEN MODAL 1: EMAIL (Aizen manipulating Naruto) -->
+    <div class="modal" id="modal-email-1">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('modal-email-1')">X</button>
+            <div class="log-header">SECURE_MEMO_REF #4410-X // SUB: CHARITY FOUNDATION AUDIT</div>
+            <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.85rem;">[A] to [JUN[Redacted] Ana[Redacted]]</p>
+            <p>"Do not let their legal threats deter you. The board intends to quietly dissolve your community foundation tomorrow morning, labeling your supporters as financial liabilities. I have quietly routed the necessary security overrides to your terminal. You have the courage to stop their corruption permanently. Execute the grid isolation protocol. I am entirely at your service to ensure your vision is protected."</p>
+        </div>
+    </div>
+
+    <!-- HIDDEN MODAL 2: CALL LOG (Aizen & Naruto manipulation) -->
+    <div class="modal" id="modal-call-1">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('modal-call-1')">X</button>
+            <div class="log-header">ENCRYPTED_AUDIO_STREAM #77 // RECORDED: 23:02</div>
+            <div class="msg-alpha"><strong>[A]:</strong> Have you secured the kitchen compliance logs through the human resources director as discussed?</div>
+            <div class="msg-beta"><strong>[Kid]:</strong> Yeah, I got the leverage over the chefs. But I still don't like innocent people taking the fall for Richard's crimes.</div>
+            <div class="msg-alpha"><strong>[A]:</strong> True systemic reform always demands sacrifice. Trust my guidance completely. When the dust settles, you will lead the reconstruction. I only desire to see your ideals brought to light.</div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function verifyMasterCode() {
+            const val = document.getElementById('master-code').value.trim();
+            const error = document.getElementById('error-msg');
+            
+            // Only Game 3's code (9024) is accepted as the true master clearance
+            if(val === "9024") {
+                document.getElementById('success-box').style.display = 'block';
+                document.querySelector('.gate-section').style.display = 'none';
+                error.style.display = 'none';
+            } else {
+                error.style.display = 'block';
+                setTimeout(() => error.style.display = 'none', 2000);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aethelgard | Trial 03: Data Stream</title>
+    <style>
+        :root { --bg: #061a14; --card: #0b2920; --accent: #10b981; --text: #ecfdf5; --border: #134e4a; --error: #f43f5e; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; user-select: none; }
+        body { background-color: var(--bg); color: var(--text); padding: 1.5rem 1rem; display: flex; flex-direction: column; align-items: center; }
+        .container { max-width: 500px; width: 100%; background: var(--card); border: 1px solid var(--border); padding: 1.5rem; border-radius: 8px; text-align: center; }
+        h2 { color: var(--accent); margin-bottom: 0.3rem; letter-spacing: 2px; }
+        
+        canvas { background: #022c22; border: 1px solid var(--border); display: block; margin: 1rem auto; border-radius: 4px; max-width: 100%; }
+        
+        .score-board { font-size: 1.2rem; margin-bottom: 0.5rem; color: #f59e0b; font-weight: bold; }
+        .btn { padding: 0.8rem 1.5rem; background: var(--accent); color: #022c22; border: none; font-weight: bold; font-size: 1rem; cursor: pointer; border-radius: 4px; text-transform: uppercase; width: 100%; margin-top: 0.5rem; }
+        .btn:hover { background: #059669; color: #fff; }
+        
+        .controls-pad { display: flex; gap: 10px; margin-top: 1rem; }
+        .ctrl-btn { flex: 1; padding: 1rem; background: #022c22; border: 1px solid var(--accent); color: var(--accent); font-size: 1.2rem; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .ctrl-btn:active { background: var(--accent); color: #022c22; }
+
+        #reward-box { display: none; margin-top: 1rem; background: #022c22; padding: 1.5rem; border: 1px solid var(--accent); border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>TRIAL 03: DATA STREAM</h2>
+        <p style="font-size: 0.85rem; color: #6ee7b7;">Catch <strong>12 Green Packets</strong> and avoid Red Corrupted Packets.<br>Controls: Arrow Keys or Left/Right buttons.</p>
+        
+        <div class="score-board">COLLECTED: <span id="score">0</span> / 12</div>
+        
+        <canvas id="gameCanvas" width="400" height="280"></canvas>
+        
+        <button class="btn" id="start-btn" onclick="startGame()">INITIALIZE CATCHER</button>
+
+        <div class="controls-pad">
+            <button class="ctrl-btn" onclick="moveCollector(-35)">◀ LEFT</button>
+            <button class="ctrl-btn" onclick="moveCollector(35)">RIGHT ▶</button>
+        </div>
+
+        <div id="reward-box">
+            <h3 style="color: #34d399; margin-bottom: 0.5rem;">TRIAL CLEARED</h3>
+            <p>Code Segment Gamma recovered: <strong style="color: #f59e0b; font-size: 1.2rem;">9024</strong></p>
+            <p style="font-size: 0.85rem; color: #6ee7b7; margin-top: 10px;">Memorize this final code and return to the main terminal hub.</p>
+            <a href="index.html" class="btn" style="text-decoration: none; display: inline-block; margin-top: 10px;">RETURN TO HUB</a>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        let collector = { x: 160, y: 250, width: 70, height: 14, speed: 25 };
+        let items = [];
+        let score = 0;
+        let gameInterval, itemInterval;
+        let isPlaying = false;
+
+        document.addEventListener("keydown", (e) => {
+            if (!isPlaying) return;
+            if (e.key === "ArrowLeft") moveCollector(-25);
+            if (e.key === "ArrowRight") moveCollector(25);
+        });
+
+        function moveCollector(offset) {
+            if (!isPlaying) return;
+            collector.x += offset;
+            if (collector.x < 0) collector.x = 0;
+            if (collector.x > canvas.width - collector.width) collector.x = canvas.width - collector.width;
+        }
+
+        function startGame() {
+            document.getElementById('start-btn').style.display = 'none';
+            collector.x = 160;
+            items = [];
+            score = 0;
+            document.getElementById('score').innerText = score;
+            isPlaying = true;
+
+            gameInterval = setInterval(updateGame, 20);
+            itemInterval = setInterval(spawnItem, 850);
+        }
+
+        function spawnItem() {
+            let xPos = Math.random() * (canvas.width - 20);
+            let isBad = Math.random() < 0.35; 
+            items.push({ x: xPos, y: 0, size: 16, speed: 3.5 + Math.random() * 2, bad: isBad });
+        }
+
+        function updateGame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#10b981";
+            ctx.fillRect(collector.x, collector.y, collector.width, collector.height);
+
+            for (let i = items.length - 1; i >= 0; i--) {
+                let itm = items[i];
+                itm.y += itm.speed;
+
+                ctx.fillStyle = itm.bad ? "#f43f5e" : "#38bdf8";
+                ctx.fillRect(itm.x, itm.y, itm.size, itm.size);
+
+                if (
+                    itm.x < collector.x + collector.width &&
+                    itm.x + itm.size > collector.x &&
+                    itm.y < collector.y + collector.height &&
+                    itm.y + itm.size > collector.y
+                ) {
+                    if (itm.bad) {
+                        endGame(false);
+                        return;
+                    } else {
+                        items.splice(i, 1);
+                        score++;
+                        document.getElementById('score').innerText = score;
+                        if (score >= 12) {
+                            endGame(true);
+                            return;
+                        }
+                        continue;
+                    }
+                }
+
+                if (itm.y > canvas.height) {
+                    items.splice(i, 1);
+                }
+            }
+        }
+
+        function endGame(won) {
+            isPlaying = false;
+            clearInterval(gameInterval);
+            clearInterval(itemInterval);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (won) {
+                document.getElementById('reward-box').style.display = 'block';
+            } else {
+                alert("CORRUPTED PACKET CAUGHT. RESETTING STREAM...");
+                document.getElementById('start-btn').style.display = 'inline-block';
+            }
+        }
+    </script>
+</body>
+</html>
